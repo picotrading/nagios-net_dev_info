@@ -12,6 +12,12 @@ Usage
 ./net_dev_info.py --warning @2:4 --critical @5: --device eth0 --metric rx_errs
 ```
 
+To see all options of the plugin, use the following command:
+
+```
+./net_dev_info.py --help
+```
+
 
 Testing
 -------
