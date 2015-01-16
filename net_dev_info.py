@@ -50,7 +50,7 @@ class NetDevInfo(nagiosplugin.Resource):
         for line in f_data:
             # Skip first two lines
             if line_cnt > 1:
-                data = pattern.split(line.lstrip().replace(':', ''))
+                data = pattern.split(line.lstrip().replace(':', ' '))
                 device_name = data[0]
 
                 # Get metric only for the specified device
