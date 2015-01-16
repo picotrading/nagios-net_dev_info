@@ -53,7 +53,7 @@ $ while [ true ]; do ./net_dev_info.py -f $(shuf -i 0-5 -n 1); sleep 1; done
 Which gives output like this:
 
 ```
-NETDEVINFO WARNING - rx_errs increased by 3 in 0 seconds | rx_errs=3;@2:4;@5:
+NETDEVINFO OK - rx_errs increased by 0 in 0 seconds | rx_errs=3;@2:4;@5:
 NETDEVINFO OK - rx_errs increased by 0 in 1 seconds | rx_errs=0;@2:4;@5:
 NETDEVINFO OK - rx_errs increased by 0 in 1 seconds | rx_errs=0;@2:4;@5:
 NETDEVINFO CRITICAL - rx_errs increased by 5 in 1 seconds | rx_errs=5;@2:4;@5:

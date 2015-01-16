@@ -14,11 +14,12 @@ _log = logging.getLogger('nagiosplugin')
 
 # Class which allows to share values between the probe and the summary class
 class Storage():
-    def __init__(self, all_metrics, device, metric, cur_time):
+    def __init__(self, all_metrics, device, metric, cur_time, tmp):
         self.all_metrics = all_metrics
         self.device = device
         self.metric = metric
         self.cur_time = cur_time
+        self.tmp = tmp
         self.prev_time = 0
         self.prev_val = 0
 
@@ -31,8 +32,8 @@ class NetDevInfo(nagiosplugin.Resource):
 
     def probe(self):
         f_io_name = (
-            '/tmp/nagios_net_dev_%s_%s' %
-            (self.storage.device, self.storage.metric))
+            '%s/nagios_net_dev_%s_%s' %
+            (self.storage.tmp, self.storage.device, self.storage.metric))
 
         # Open data file
         f_data = open('/proc/net/dev')
@@ -49,8 +50,8 @@ class NetDevInfo(nagiosplugin.Resource):
         for line in f_data:
             # Skip first two lines
             if line_cnt > 1:
-                data = pattern.split(line.lstrip())
-                device_name = data[0].rstrip(':')
+                data = pattern.split(line.lstrip().replace(':', ''))
+                device_name = data[0]
 
                 # Get metric only for the specified device
                 if device_name == s.device:
@@ -64,7 +65,9 @@ class NetDevInfo(nagiosplugin.Resource):
 
                         (s.prev_time, s.prev_val) = map(int, line.split('\t'))
                     else:
+                        # First run
                         s.prev_time = s.cur_time
+                        s.prev_val = cur_val
 
                     if self.fake is not None:
                         # Allow to fake the value
@@ -149,6 +152,11 @@ def parse_arguments(metrics):
         metavar='INT',
         type=int,
         help='fake value (for testing purpose only)')
+    parser.add_argument(
+        '--tmp', '-t',
+        metavar='DIR',
+        default='/tmp',
+        help='path to the temp direcotry (defaut: /tmp)')
 
     return (parser.parse_args(), parser)
 
@@ -165,7 +173,7 @@ def main():
     (args, parser) = parse_arguments(metrics)
 
     # Instance of the sharing storage
-    storage = Storage(metrics, args.device, args.metric, int(time()))
+    storage = Storage(metrics, args.device, args.metric, int(time()), args.tmp)
 
     # Instantiate the check
     check = nagiosplugin.Check(
