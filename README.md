@@ -44,7 +44,7 @@ NETDEVINFO CRITICAL - rx_errs increased by 9 in 1 seconds | rx_errs=9;@2:4;@5:
 NETDEVINFO CRITICAL - rx_errs increased by 10 in 1 seconds | rx_errs=10;@2:4;@5:
 ```
 
-Or use the following command to use randon increments (range from 0 to 5):
+Or use the following command to use random increments (range from 0 to 5):
 
 ```
 $ while [ true ]; do ./net_dev_info.py -f $(shuf -i 0-5 -n 1); sleep 1; done
